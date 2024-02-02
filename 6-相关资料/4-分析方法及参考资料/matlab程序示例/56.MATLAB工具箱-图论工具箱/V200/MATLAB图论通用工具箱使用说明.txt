@@ -1,0 +1,219 @@
+《MATLAB图论通用工具箱使用说明》
+
+About GraphThoery Toolbox for MATLAB
+
+欢迎使用《图论通用工具箱 for MATLAB》。本图论工具箱是笔者
+数学建模大赛时备战参阅相关书籍课本、参照网络资源代码编写
+整理收集而成，功能全面实用。鉴于一般的程序运行效率低下，
+难以满足实际运行时速度的要求、或者根本无法解算的问题，对其中
+相当数量的核心代码实现作了重新改写编连，运行效率极大地提高，
+即使对于阶数上千至万数量级的问题也可以很快地给予解决（虽然通常
+我们实际遇到的问题都不过十阶以内，普通的程序通常也完全能实现了）。
+由于工具包内函数过多复杂，并且随着开发版本的升级还在不断地增加，
+下面只对通用的几个主要的核心程序加以简要介绍，用户可根据相关的
+帮助和演示程序自行研究。
+
+function [lWeight,ETree]=LeastTree(MTree,begX)
+%LEASTTREE  Find the least spanning tree on Graph based on Prim Method
+%  [lWeight,ETree,varargout]=LeastTree(MTree,begX,varargin)
+%  See also LEASTPATH, LEASTTREEEX
+%  Copyright 2008-9-3 Tan KaiShuai Corporation
+根据加权邻接矩阵MTree求取最小生成树ETree,MTree的每一列确定一条
+边（路径）,lWeight返回求得的最小生成树的权和（即为最小路径）。在
+MTree中如果两点间无相邻，可用无穷（inf）标识，也可用负数（如-1）代替。
+begX用于确定算法的初始搜索点，可任意指定有效点的索引：1~length(MTree),
+通常取1即可。
+
+function [lWeight,ETree]=LeastTreeEx(MTree,begX,endX)
+%LEASTTREEEX  Find the least path on Graph based on Kijkstra Method
+%  [lWeight,ETree]=LeastTreeEx(MTree,begX,endX)
+%  See also LEASTPATH, LEASTTREE
+%  Copyright 2008-9-3 Tan KaiShuai Corporation
+根据加权邻接矩阵MTree求取根在begX的有向最小生成树ETree,MTree的每一列
+确定一条边（路径）,在MTree中如果两点间无相邻，可用无穷（inf）标识，
+也可用负数（如-1）代替。begX用于确定算法的初始搜索点（即树根位置），
+endX指定所求树枝顶点位置。lWeight返回begX与endX之间的最短路径。
+
+function [lWeight,ETree]=LeastTreePlus(MTree)
+%LEASTTREEPLUS  Find the least spanning tree on Graph based on Kruskal Method
+%  [lWeight,ETree,varargout]=LeastTreePlus(MTree,varargin)
+%  See also LEASTPATH, LEASTPATHEX, LEASTTREEEX
+%  Copyright 2008-9-10 Tan KaiShuai Corporation
+与函数LeastTree(...)相同，但使用不同的算法实现。
+根据加权邻接矩阵MTree求取最小生成树ETree,MTree的每一列确定一条
+边（路径）,lWeight返回求得的最小生成树的权和（即为最小路径）。在
+MTree中如果两点间无相邻，可用无穷（inf）标识，也可用负数（如-1）代替。
+
+function [lWeight,EPath,PTemp]=LeastPath(MPath,begX,endX)
+%LEASTPATH  Find the least path on Graph based on Floyd Method
+%  [lWeight,EPath,PTemp]=LeastPath(MPath,begX,endX)
+%  See also LEASTTREE, LEASTTREEEX
+%  Copyright 2008-9-3 Tan KaiShuai Corporation
+根据加权邻接矩阵MPath求取自begX到endX之间的最短路lWeight,MTree的每一列
+确定一条边（路径）,在MTree中如果两点间无相邻，可用无穷（inf）标识，
+也可用负数（如-1）代替。begX用于确定算法的初始点，endX指定所求树枝顶点位置。
+lWeight返回begX与endX之间的最短路径。EPath返回所求得的路径，其格式同上。
+PTemp返回使用Floyd算法求得的中间矩阵。该矩阵描述了图MPath的全部优化信息。
+
+function [lWeight,EPath,ETree]=LeastPathEx(MTree,begX,endX)
+%LEASTPATHEX Find the least path on Graph based on Kijkstra Method
+%  [lWeight,EPath,ETree]=LeastPathEx(MTree,begX,endX)
+%  See also LEASTPATH, LEASTTREE
+%  Copyright 2008-9-3 Tan KaiShuai Corporation
+根据加权邻接矩阵MTree求取自begX到endX之间的最短路lWeight,MTree的每一列
+确定一条边（路径）,在MTree中如果两点间无相邻，可用无穷（inf）标识，
+也可用负数（如-1）代替。begX用于确定算法的初始点，endX指定所求树枝顶点位置。
+lWeight返回begX与endX之间的最短路径。EPath返回所求得的路径，其格式同上。
+ETree返回使用Kijkstra算法求得的有向树型结构。格式同上。
+
+function [lWeight,EPath,ETree]=LeastPathPlus(MTree,begX,endX)
+%LEASTPATHPLUS Find the least path on Graph based on Kijkstra Method
+%  [lWeight,EPath,ETree]=LeastPathPlus(MTree,begX,endX)
+%  See also LEASTPATH, LEASTTREE
+%  Copyright 2008-9-6 Tan KaiShuai Corporation
+与函数LeastPathEx(...)相同，但计算速度更快。
+
+function void=PlotGraph(MTree,ETree)
+%PLOTGRAPH  Plot Graph for GraphTheory Toolbox
+%  varargout=PlotGraph(MTree,ETree,varargin)
+%  Copyright 2008-9-8 Tan KaiShuai Corporation
+使用图形的方式绘制图形结构。可以直观展现所求得的问题的解。
+
+function [y,fval]=BranchBound(c,A,b,Aeq,beq)
+%%本程序是用分枝定界法求解整数线性规划问题
+%%  [y,fval]=BranchBound(c,A,b,Aeq,beq)
+%%  问题的标准形式：
+%%  min c'*x
+%%  s.t. A*x<=b
+%%       Aeq*x=beq
+%%       x要求是整数
+%%程序的编写者：快乐逍遥侠
+%%程序的最后修改时间是：2007-11-24
+
+function EXor=CompareTree(ETree,ETree2)
+%COMPARETREE  Compare Graph Tree for GraphTheory Toolbox
+%  [EXor,varargout]=CompareTree(ETree,ETree2,varargin)
+%  Copyright 2008-9-10 Tan KaiShuai Corporation
+比较两条路径的差别，返回两者不一致的边的全下标索引。
+
+function final=Dijkstra(A,x,y) 
+% Dijkstra's Shortest Path 
+% final=Dijkstra(A,x,y) 
+使用Dijkstra算法求取给定图中两定点的最短路径 final。
+
+function [e,s]=fc01(a,flag) 
+%  [e,s]=fc01(a,flag) 
+%图论常用算法通用matlab程序
+
+function [e,total]=fc02(d)
+%  [e,total]=fc02(d)
+%图论常用算法通用matlab程序
+
+function Fitness=Fitness(x,FARM,e,q,w) 
+%这是一个具有200个01决策变量的多目标非线性整数规划，编写优化的目标函数如下，
+%其中将多目标转化为单目标采用简单的加权处理。 
+%  Fitness=Fitness(x,FARM,e,q,w) 
+%% 适应度函数 
+% 输入参数列表 
+% x 决策变量构成的4×50的0-1矩阵 
+% FARM 细胞结构存储的当前种群，它包含了个体x 
+% e 4×50的系数矩阵 
+% q 4×50的系数矩阵 
+% w 1×50的系数矩阵 
+
+function [d,r]=Floyd(a)
+function [D,path]=Floyd2(a)
+%floyd算法计算图a中每对顶点最短路
+%  [d,r]=Floyd(a)
+%采用floyd算法计算图a中每对顶点最短路
+%d是矩离矩阵
+%r是路由矩阵
+
+function mCol=grColEdge(E)
+%图论边着色问题2007-10-06 17:58
+
+function [d,path]=Hamilton(A)
+%[d,path]=Hamilton(A)
+用于求解图论哈密顿回路Hamilton问题。其中A为有向图的结构描述。
+
+function [x,val]=ilinprog(n,f,a,b,aeq,beq,lb,ub)
+%整数规划分支定界算法matlab通用源程序
+%  [x,val]=ilinprog(n,f,a,b,aeq,beq,lb,ub)
+%各参数的意义同matlab优化工具箱的线性规划函数linprog
+%调用前，输入参数要化成matlab的标准形式
+
+function [x,fval]=ILP(f,A,b,Aeq,beq,lb,ub,lints,ltimes,lerr)
+%ILP Solve the ILP Problem
+%  [x,fval]=ILP(f,A,b,Aeq,beq,lb,ub,lints,ltimes,lerr)
+%  Copyright 2008-9-8 Tan KaiShuai Corporation
+ILP(...)利用递归的分支定解法求解整数规划问题的改进算法。
+
+function c1=kruskal(c,v0)
+%  c1=kruskal(c,v0)
+%最小生成树kruskal原程序
+%c:原图的邻接矩阵
+%v0:根节点
+%c1:最小生成树的邻接矩阵
+
+function [f,s]=MaxFlow(startp,endp,c) 
+function [result,msum]=Sbppp(cost,m)
+%最小最大流通用实现程序
+%  [f,s]=MaxFlow(startp,endp,c)
+%c为容量网络 
+%对容量网络的填写做一下说明 
+%容量具有方向性，比如弧(i,j)的容量为10，弧(j,i)为0 
+%即矩阵无须有对称性 
+
+function [f,s]=MaxFlow2(startp,endp,c)
+%  [f,s]=MaxFlow2(startp,endp,c)
+%c为容量网络
+%对容量网络的填写做一下说明
+%容量具有方向性，比如弧(i,j)的容量为10，弧(j,i)为0
+
+function  [Mm,mc,Mmr]=MpMc(a,c)
+%  [Mm,mc,Mmr]=MpMc(a,c)
+%计算最小费用最大流MATLAB源代码,文件名为mp_mc.m
+
+function [out,len]=kruskal(map)
+%  [out,len]=kruskal(map)
+%  [out,len]=kruskal(map)
+%求最小生成树算法,通过kruskal算法求最优树,并给出相应图像. 
+
+function [p,v]=ShortstPath(map,u1,u2,style)
+%  [p,v]=ShortstPath(map,u1,u2,style)
+% 图与网络论中求最短路径的Dijkstra算法M函数
+%格式[S,D]=minroute(i,m,W)
+% i为最短路径的起始点，m为图顶点数，W为图的带权邻接矩阵，
+%不构成边的两顶点之间的权用inf表示。显示结果为：S的每一列从上到下记录了从始点到终点的最短路径所经顶点的序号；
+% D是一行向量，记录了S中所示路径大小；
+
+function [T,l]=Prim(Adj)
+图论Prim算法实现。
+
+function [p,v]=dijk1(map,u1,u2)
+%  [p,v]=dijk1(map,u1,u2)
+%求网络最短路径的dijkstra算法
+%用法:首先输入矩阵: 
+map=[起点1 终点1 边长1;起点2 终点2  边长2;............;起点n 终点n 边长n和u1,u2
+%  注意：这里map为无向图。再用[p,v]=dijkstra(map,u1,u2)求最短路径
+%参数说明
+map----3列邻接矩阵,每行表示一条边.
+第一列表示起点,第二列表示终点,第三列表示边长
+u1---所求路径起点u2---所求路径终点p---输出最短路径v---最短路径的总长度
+
+function [L,R]=Router2(D,path,s,t) 
+%  [L,R]=Router2(D,path,s,t) 
+%配合floyd算法的后续程序,s为源点,t为宿点 
+%L为长度,R为路由矩阵无须有对称性
+
+function [S,D]=dijk2(W,i,m)
+%  [S,D]=dijk2(W,i,m)
+% 图与网络论中求最短路径的Dijkstra算法M函数
+%格式[S,D]=minroute(i,m,W)
+% i为最短路径的起始点，m为图顶点数，W为图的带权邻接矩阵，
+%不构成边的两顶点之间的权用inf表示。显示结果为：S的每一列从上到下记录了从始点到终点的最短路径所经顶点的序号；
+% D是一行向量，记录了S中所示路径大小；
+
+
+
+2008.12.10

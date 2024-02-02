@@ -1,0 +1,10 @@
+% MATLAB数学建模工具箱
+% Version 1.2 28-March-2001
+%
+% 安装步骤
+% 1. 将MATHMODL.zip解压缩至matlab11\toolbox\;
+% 2. 启动Matlab,利用Path Browser中的Add path菜单将
+%    matlab11\toolbox\mathmodl增至path中,放在最前面，并保存设置；
+% 3. 回到你的工作目录。现在MATHMODL已成为一个普通的工具箱了。
+%
+% 可以使用命令help mathmodl查看内容或直接用命令mathmodl学习教程。

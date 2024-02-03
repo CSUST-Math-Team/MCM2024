@@ -5,7 +5,7 @@ import pyreadstat
 df, meta = pyreadstat.read_sav('数据处理前.sav')
 
 # 获取需要进行 Max-Min 编码的列
-columns_to_normalize = ['last_time', 'elapsed_time', 'point_no', 'p1_score', 'p2_score', 'p1_points_won', 'p2_points_won', 'p1_distance_run', 'p2_distance_run', 'rally_count', 'speed_mph']
+columns_to_normalize = ['last_time', 'elapsed_time', 'point_no', 'p1_score', 'p2_score', 'p1_points_won', 'p2_points_won', 'p1_distance_run',  'rally_count', 'speed_mph']
 
 # 循环处理每列进行 Max-Min 编码
 for column in columns_to_normalize:
